@@ -37,7 +37,7 @@ export default class Item extends React.Component<ItemProperties, ItemState> {
       return icon? `./icons/${icon}.png` : defaultIcon;
     })(item.icon);
 
-    const title = matchingIndexes?.reverse()
+    const title = matchingIndexes?.slice().reverse()
       .reduce((title, [startIndex, endIndex]) =>
         title.substring(0, startIndex) +'{b}'+
         title.substring(startIndex, endIndex) +'{/b}'+
