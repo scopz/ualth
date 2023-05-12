@@ -38,7 +38,7 @@ export default class SaverCommand extends Command {
       this.keyWord = `${SaverCommand.masterKey} ${data.key}`;
       this.key = data.key;
       this.content = data.value;
-      this.title = `Copies content from "${this.key}": {b}${this.content}{/b}`;
+      this.title = `Copy {i}${this.key}{/i}: {b}${this.content}{/b}`;
 
     } else {
       switch(data.action) {
@@ -155,7 +155,7 @@ export default class SaverCommand extends Command {
 
           if (existing) {
             existing.content = content;
-            existing.title = `Copies content from "${existing.key}": {b}${content}{/b}`;
+            existing.title = `Copy {i}${existing.key}{/i}: {b}${content}{/b}`;
 
           } else {
             const addIndexSlice = (aux => {

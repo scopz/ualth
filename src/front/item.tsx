@@ -44,10 +44,10 @@ export default class Item extends React.Component<ItemProperties, ItemState> {
         title.substring(endIndex), item.title)
       .replace(/</gm, '&lt;')
       .replace(/>/gm, '&gt;')
-      .replace(/{b}(.*?){\/b}/gm, '<b>$1</b>')
-      .replace(/{u}(.*?){\/u}/gm, '<u>$1</u>')
-      .replace(/{s}(.*?){\/s}/gm, '<s>$1</s>')
-      .replace(/{i}(.*?){\/i}/gm, '<i>$1</i>')
+      .replace(/{b}(.*?){\/b}/gsm, '<b>$1</b>')
+      .replace(/{u}(.*?){\/u}/gsm, '<u>$1</u>')
+      .replace(/{s}(.*?){\/s}/gsm, '<s>$1</s>')
+      .replace(/{i}(.*?){\/i}/gsm, '<i>$1</i>')
       ?? item.title;
 
     return (
