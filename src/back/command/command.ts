@@ -44,12 +44,18 @@ export default class Command {
   }
 
   match(inputText: string): SearchResult {
-    const value = this.requiresParams
-      ? inputText.split(' ')[0]
-      : inputText;
-
-    if (!value.length) {
+    if (!inputText.length) {
       return { level: SearchLevel.NOT_FOUND };
+    }
+
+    let value = inputText;
+
+    if (this.requiresParams) {
+      const split = inputText.split(' ');
+      if (split.length > 1 && this.keyWord != split[0]) {
+        return { level: SearchLevel.NOT_FOUND };
+      }
+      value = split[0];
     }
 
     if (this.startsWith) {
