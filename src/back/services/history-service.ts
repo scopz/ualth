@@ -6,6 +6,7 @@ import { commands } from '../config-load';
 import { HistoricSearchResult, SearchLevel } from '../../shared-models/models';
 
 const HISTORIC_PATH = join(homedir(), '.ualthhi');
+const MAX_HISTORY = 10000;
 
 if (!fs.existsSync(HISTORIC_PATH)) {
   fs.closeSync(fs.openSync(HISTORIC_PATH, 'w'));
@@ -63,8 +64,8 @@ export function saveHistory(command: Command, input: string): void {
     inputText: input
   });
 
-  if (historic.length > 100) {
-    historic.splice(0, historic.length - 100);
+  if (historic.length > MAX_HISTORY) {
+    historic.splice(0, historic.length - MAX_HISTORY);
   }
 
   saveFile();
