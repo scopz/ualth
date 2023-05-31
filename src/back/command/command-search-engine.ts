@@ -1,16 +1,20 @@
 import { shell } from "electron";
-import { SearchEngineConfig } from "../models/config.model";
+import { SearchEngineConfig, SearchEngineConfigElement } from "../models/config.model";
 import Command from "./command";
 import { search } from '../services/search-service';
 import { SearchLevel, SearchResult } from '../../shared-models/models';
+import { spawn } from "child_process";
+
+type Spawner = (url: string) => void;
 
 export default class SearchEngineCommand extends Command {
   static label = 'searchEngines';
+  static spawner: Spawner = (url: string) => shell.openExternal(url);
 
   url: string;
   rootUrl?: string;
 
-  constructor(data: SearchEngineConfig) {
+  constructor(data: SearchEngineConfigElement) {
     super('SearchEngineCommand');
 
     this.keyWord = data.key;
@@ -20,6 +24,14 @@ export default class SearchEngineCommand extends Command {
     this.requiresParams = true;
     this.icon = data.icon || 'search-engine';
     this.generateId();
+  }
+
+  static override parseDefinitions(data: SearchEngineConfig) {
+    const program = data.use;
+    if (program)
+      SearchEngineCommand.spawner = url => spawn(program, [url], { detached: true });
+
+    return data.engines;
   }
 
   override match(inputText: string): SearchResult {
@@ -42,13 +54,20 @@ export default class SearchEngineCommand extends Command {
   }
 
   override perform(argsList: string[]) {
+
     if (this.rootUrl && !argsList.length) {
-      shell.openExternal(this.rootUrl);	
+      SearchEngineCommand.spawner(this.rootUrl)
 
     } else {
-      const queryValue = encodeURIComponent(argsList.join(' '));
-      const result = this.url.replace('{q}', queryValue);
-      shell.openExternal(result);
+      const param = argsList.join(' ');
+      const queryValue = encodeURIComponent(param);
+
+      const result = this.url
+        .replace('{q}', queryValue)
+        .replace('{q:d}', param)
+        .replace('{q:e}', encodeURIComponent(queryValue));
+
+      SearchEngineCommand.spawner(result);
     }
   }
 }

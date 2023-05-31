@@ -30,14 +30,16 @@
 		"bookmarkFile": "",
 		"path": ""
 	},
-	"searchEngines": [
-		{
-			"key": "google",
-			"title": "Search with Google",
-			"url": "https://www.google.es/search?q={q}",
-			"icon": "google"
-		}
-	],
+	"searchEngines": {
+		"engines": [
+			{
+				"key": "google",
+				"title": "Search with Google",
+				"url": "https://www.google.es/search?q={q}",
+				"icon": "google"
+			}
+		]
+	},
 	"runner": [
 		{
 			"key": "ualthrc",

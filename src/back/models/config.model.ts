@@ -30,6 +30,10 @@ export interface ChromeConfig {
 }
 
 export interface SearchEngineConfig {
+  use?: string,
+  engines: SearchEngineConfigElement[]
+}
+export interface SearchEngineConfigElement {
   key: string,
   title?: string,
   url: string,
