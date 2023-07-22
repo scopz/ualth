@@ -18,6 +18,10 @@ export interface SaverConfig {
   file: string
 }
 
+export interface CopyConfig {
+  key: string
+}
+
 export interface FirefoxConfig {
   profileFolder?: string,
   path?: string,

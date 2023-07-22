@@ -7,6 +7,7 @@ import FirefoxCommand from "./command-firefox";
 import ChromeCommand from "./command-chrome";
 import InternalCommand from "./command-internal";
 import HashCommand from "./command-hash";
+import CopyCommand from "./command-copy";
 
 const commandsClasses = [
   SearchEngineCommand,
@@ -15,7 +16,8 @@ const commandsClasses = [
   FirefoxCommand,
   ChromeCommand,
   InternalCommand,
-  HashCommand
+  HashCommand,
+  CopyCommand
 ]
 
 export default function load(config: Config) {

@@ -19,6 +19,9 @@
 		"key": "s",
 		"file": "~/.ualthdb"
 	},
+	"copy": {
+		"key": ","
+	},
 	"firefoxBookmarks": {
 		"profileFolder": "",
 		"path": "",
