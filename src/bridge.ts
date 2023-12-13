@@ -5,7 +5,7 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld(
 	'ipcRenderer', {
 		send: (channel: string, ...data: any[]) => {
-			const validChannels = ['hide', 'height'];
+			const validChannels = ['hide', 'height', 'removeHistory'];
 			if (validChannels.includes(channel)) {
 				ipcRenderer.send(channel, ...data);
 			}

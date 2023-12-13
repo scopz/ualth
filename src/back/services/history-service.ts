@@ -51,6 +51,14 @@ export function getHistoryString(index: number): HistoryElement | undefined {
   return index < historic.length ? historic[historic.length-index-1] : undefined;
 }
 
+export function removeHistoryByIndex(index: number) {
+  const revertIndex = historic.length-index-1;
+  if (revertIndex < historic.length && revertIndex >= 0) {
+    historic.splice(revertIndex, 1);
+    saveFile();
+  }
+}
+
 export function saveHistory(command: Command, input: string): void {
 
   const index = historic.findIndex(historicElement =>

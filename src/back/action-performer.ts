@@ -1,6 +1,6 @@
 import { config, commands } from './config-load';
 import { PriorizedSearchResult, SearchLevel, HistoryElement } from '../shared-models/models';
-import { saveHistory, searchHistory, getHistoryString } from './services/history-service';
+import { saveHistory, searchHistory, getHistoryString, removeHistoryByIndex } from './services/history-service';
 import { sortSearchResults } from './services/search-service';
 
 export function match(inputText: string): PriorizedSearchResult[] {
@@ -51,4 +51,8 @@ export function resolve(value: string): string {
 
 export function historyString(index: number): HistoryElement | undefined {
   return getHistoryString(index);
+}
+
+export function removeHistory(index: number) {
+  return removeHistoryByIndex(index);
 }

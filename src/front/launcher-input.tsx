@@ -85,6 +85,14 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
         }
       }
 
+    } else if (ev.shiftKey && ev.code === 'Delete') {
+      ev.preventDefault();
+      if (this.historyIndex >= 0) {
+        ipcRenderer.send('removeHistory', this.historyIndex);
+        this.historyIndex = -1;
+        this.input.value = '';
+        this.props.clearItems();
+      }
     } else if (ev.key.length === 1 && !ev.ctrlKey) {
       this.historyIndex = -1;
       const { selectionStart, selectionEnd, value } = this.input;
