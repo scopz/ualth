@@ -27,6 +27,7 @@ export interface HistoricSearchResult {
 }
 
 export interface HistoryElement {
+  visible: boolean,
   commandId: string,
   inputText: string
 }

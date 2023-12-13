@@ -16,14 +16,15 @@ const historic: HistoryElement[] = (fileName => {
   if (fs.existsSync(fileName)) {
 
     return fs.readFileSync(fileName, 'utf-8')
-      .split('\n')
+      .split(/\r\n|\n/)
       .filter(notEmptyLine => notEmptyLine)
       .reduce((list, line) => {
-        const matches = line.match(/^([^\s]+?):(.*)$/);
-        if (matches && matches.length === 3) {
+        const matches = `${line}`.match(/^([10]):([^\s]+?):(.*)$/);
+        if (matches && matches.length === 4) {
           list.push({
-            commandId: matches[1],
-            inputText: matches[2]
+            visible: matches[1] === '1',
+            commandId: matches[2],
+            inputText: matches[3]
           });
         }
         return list;
@@ -48,32 +49,40 @@ export function searchHistory(input: string): HistoricSearchResult[] {
 }
 
 export function getHistoryString(index: number): HistoryElement | undefined {
-  return index < historic.length ? historic[historic.length-index-1] : undefined;
+
+  const visibleHistoric = historic.filter(historicElement => historicElement.visible).reverse();
+
+  return index < visibleHistoric.length ? visibleHistoric[index] : undefined;
 }
 
 export function removeHistoryByIndex(index: number) {
-  const revertIndex = historic.length-index-1;
-  if (revertIndex < historic.length && revertIndex >= 0) {
-    historic.splice(revertIndex, 1);
+
+  const visibleHistoric = historic.filter(historicElement => historicElement.visible).reverse();
+
+  if (index < visibleHistoric.length && index >= 0) {
+    visibleHistoric[index].visible = false;
     saveFile();
   }
 }
 
 export function saveHistory(command: Command, input: string): void {
 
-  const index = historic.findIndex(historicElement =>
-    historicElement.commandId === command.id && (
-      command.requiresParams
-        ? historicElement.inputText === input
-        : true
-    )
-  );
+  historic
+    .map((historicElement, index) => {
+      if (historicElement.commandId !== command.id) {
+        return -1;
+      }
 
-  if (index >= 0) {
-    historic.splice(index, 1);
-  }
+      return !historicElement.visible || (command.requiresParams ? historicElement.inputText === input : true)
+        ? index
+        : -1
+    })
+    .filter(index => index >= 0)
+    .reverse()
+    .forEach(index => historic.splice(index, 1));
 
   historic.push({
+    visible: true,
     commandId: command.id!,
     inputText: input
   });
@@ -87,7 +96,7 @@ export function saveHistory(command: Command, input: string): void {
 
 function saveFile(): void {
   const content = historic
-    .map(historicElement => `${historicElement.commandId}:${historicElement.inputText}`)
+    .map(historicElement => `${historicElement.visible?'1':'0'}:${historicElement.commandId}:${historicElement.inputText}`)
     .join('\n');
 
   fs.writeFile(HISTORIC_PATH, content, 'utf-8', err => {
