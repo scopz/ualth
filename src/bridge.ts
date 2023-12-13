@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld(
 			}
 		},
 		sendSync: (channel: string, ...data: any[]) => {
-			const validChannels = ['find', 'perform', 'resolve'];
+			const validChannels = ['find', 'perform', 'resolve', 'history'];
 			if (validChannels.includes(channel)) {
 				return ipcRenderer.sendSync(channel, ...data);
 			}

@@ -25,3 +25,8 @@ export interface HistoricSearchResult {
   priority: number,
   searchResult?: SearchResult
 }
+
+export interface HistoryElement {
+  commandId: string,
+  inputText: string
+}

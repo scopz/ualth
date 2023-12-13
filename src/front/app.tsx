@@ -69,14 +69,19 @@ export default class App extends React.Component<AppProperties, AppState> {
     this.resizeWindow(0);
   }
 
-  loadItems = (text: string, select = -1): Command | undefined => {
+  loadItems = (text: string, select: number | string = -1): Command | undefined => {
     const results = ipcRenderer.sendSync<Array<PriorizedSearchResult>>('find', text);
-    const canSelect = results.length > select;
+
+    const index = typeof select === 'string'
+      ? results.findIndex(item => item.command.id === select) ?? -1
+      : select;
+
+    const canSelect = results.length > index;
 
     this.resizeWindow(results.length);
-    this.setState({ results, resultSelected: canSelect? select : -1 });
-    if (canSelect && select >= 0) {
-      return results[select].command;
+    this.setState({ results, resultSelected: canSelect? index : -1 });
+    if (canSelect && index >= 0) {
+      return results[index].command;
     }
   }
 

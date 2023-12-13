@@ -1,12 +1,12 @@
 import React from 'react';
-import { Command } from '../shared-models/models';
+import { Command, HistoryElement } from '../shared-models/models';
 import './launcher-input.css';
 
 const ipcRenderer = window.ipcRenderer;
 
 interface InputLauncherProperties {
   hideApp: () => void,
-  loadItems: (text: string, select?: number) => Command | undefined,
+  loadItems: (text: string, select?: number | string) => Command | undefined,
   clearItems: (hide?: boolean) => void,
   findAndSelectNextItem: () => Command | undefined,
   findAndSelectPrevItem: () => Command | undefined,
@@ -18,6 +18,7 @@ interface InputLauncherState { }
 export default class InputLauncher extends React.Component<InputLauncherProperties, InputLauncherState> {
 
   input!: HTMLInputElement;
+  historyIndex = -1;
 
   onSubmit = (ev: React.FormEvent) => {
     this.props.onSubmitForm(this.input.value, ev.nativeEvent);
@@ -39,20 +40,41 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
       this.input.selectionStart = this.input.selectionEnd;
       this.onKeyPress(ev);
 
-    } else {
-      const selectFunction = (() => 
-        ev.code === 'ArrowUp'
-          ? this.props.findAndSelectPrevItem
-          : ev.code === 'ArrowDown'
-            ? this.props.findAndSelectNextItem
-            : undefined
-        )();
+    } else if (ev.code === 'ArrowUp' || ev.code === 'ArrowDown') {
+      ev.preventDefault();
 
-      if (selectFunction) {
-        ev.preventDefault();
-        const item = selectFunction();
+      if (ev.shiftKey) {
+
+        if (ev.code === 'ArrowUp') {
+          const historyString = ipcRenderer.sendSync<HistoryElement | undefined>('history', ++this.historyIndex);
+
+          if (historyString) {
+            this.loadAutocomplete('', historyString.inputText);
+            this.props.loadItems(historyString.inputText, historyString.commandId);
+          } else {
+            this.historyIndex--;
+          }
+        } else {
+          this.historyIndex--;
+          if (this.historyIndex >= 0) {
+            const historyString = ipcRenderer.sendSync<HistoryElement | undefined>('history', this.historyIndex);
+            if (historyString) {
+              this.loadAutocomplete('', historyString.inputText);
+              this.props.loadItems(historyString.inputText, historyString.commandId);
+            }
+          } else {
+            this.historyIndex = -1;
+            this.input.value = '';
+            this.props.clearItems();
+          }
+        }
+
+      } else {
+        const item = ev.code === 'ArrowUp'
+          ? this.props.findAndSelectPrevItem()
+          : this.props.findAndSelectNextItem();
+
         if (item) {
-
           const value = (({ selectionStart, selectionEnd, value }) =>
             selectionStart === selectionEnd
               ? value
@@ -61,11 +83,13 @@ export default class InputLauncher extends React.Component<InputLauncherProperti
 
           this.loadAutocomplete(value, item.keyWord);
         }
-      } else if (ev.key.length === 1 && !ev.ctrlKey) {
-        const { selectionStart, selectionEnd, value } = this.input;
-        this.input.value = value.substring(0, selectionStart ?? 0) + value.substring(selectionEnd ?? 0);
-        this.input.selectionStart = this.input.selectionEnd = selectionStart;
       }
+
+    } else if (ev.key.length === 1 && !ev.ctrlKey) {
+      this.historyIndex = -1;
+      const { selectionStart, selectionEnd, value } = this.input;
+      this.input.value = value.substring(0, selectionStart ?? 0) + value.substring(selectionEnd ?? 0);
+      this.input.selectionStart = this.input.selectionEnd = selectionStart;
     }
   }
 

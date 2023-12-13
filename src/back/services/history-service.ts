@@ -3,18 +3,13 @@ import { homedir } from 'os';
 import { join } from 'path';
 import Command from '../command/command';
 import { commands } from '../config-load';
-import { HistoricSearchResult, SearchLevel } from '../../shared-models/models';
+import { HistoricSearchResult, SearchLevel, HistoryElement } from '../../shared-models/models';
 
 const HISTORIC_PATH = join(homedir(), '.ualthhi');
 const MAX_HISTORY = 10000;
 
 if (!fs.existsSync(HISTORIC_PATH)) {
   fs.closeSync(fs.openSync(HISTORIC_PATH, 'w'));
-}
-
-interface HistoryElement {
-  commandId: string,
-  inputText: string
 }
 
 const historic: HistoryElement[] = (fileName => {
@@ -52,9 +47,20 @@ export function searchHistory(input: string): HistoricSearchResult[] {
     .filter(result => result.searchResult?.level !== SearchLevel.NOT_FOUND);
 }
 
+export function getHistoryString(index: number): HistoryElement | undefined {
+  return index < historic.length ? historic[historic.length-index-1] : undefined;
+}
+
 export function saveHistory(command: Command, input: string): void {
 
-  const index = historic.findIndex(historicElement => historicElement.commandId === command.id);
+  const index = historic.findIndex(historicElement =>
+    historicElement.commandId === command.id && (
+      command.requiresParams
+        ? historicElement.inputText === input
+        : true
+    )
+  );
+
   if (index >= 0) {
     historic.splice(index, 1);
   }

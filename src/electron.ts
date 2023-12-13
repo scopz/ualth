@@ -7,7 +7,7 @@ import isDev from 'electron-is-dev';
 import { config, error as loadError }  from './back/config-load';
 
 //const { config : { defaultHotkey }, error: loadError } = require('./back/config-load');
-import { perform, match, resolve } from './back/action-performer';
+import { perform, match, resolve, historyString } from './back/action-performer';
 
 const DIMENSIONS = [800, 50];
 
@@ -82,6 +82,7 @@ app.whenReady().then(() => {
 	ipcMain.on('perform', (event, arg, params) => event.returnValue = perform(arg, params));
 	ipcMain.on('resolve', (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',    (event, arg) => event.returnValue = match(arg));
+	ipcMain.on('history', (event, arg) => event.returnValue = historyString(arg));
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
