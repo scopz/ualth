@@ -22,6 +22,10 @@
 	"copy": {
 		"key": ","
 	},
+	"unixApps": [
+		"/usr/share/applications",
+		"~/.local/share/applications"
+	],
 	"firefoxBookmarks": {
 		"profileFolder": "",
 		"path": "",

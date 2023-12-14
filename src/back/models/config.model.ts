@@ -64,6 +64,8 @@ export default interface Config {
   internalCommands: InternalCommandsConfig,
   hash?: HashConfig,
   infoSaver?: SaverConfig,
+  copy?: CopyConfig,
+  unixApps?: string[],
   firefoxBookmarks?: FirefoxConfig,
   chromeBookmarks?: ChromeConfig,
   searchEngines?: SearchEngineConfig[],

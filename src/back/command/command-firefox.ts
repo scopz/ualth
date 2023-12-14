@@ -40,7 +40,7 @@ export default class FirefoxCommand extends Command {
   static override parseDefinitions(data: FirefoxConfig): ProfiledBookmark[] {
     FirefoxCommand.path = data.path;
 
-    const path = data.profileFolder || (win => win? WIN_PATH : LINUX_PATH)(process.platform === 'win32');
+    const path = data.profileFolder || (process.platform === 'win32'? WIN_PATH : LINUX_PATH);
     const dir = path.replace('~', homedir());
 
     if (!fs.existsSync(dir)) {
