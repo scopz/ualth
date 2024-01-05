@@ -1,3 +1,5 @@
+import { StyleConfig } from "../../shared-models/models"
+
 export interface DefaultConfig {
   command: string,            // execute program
   textEditorCommand: string   // program to open text files with
@@ -60,6 +62,7 @@ export interface CommandRunConfig {
 export default interface Config {
   defaultHotkey: string,
   default: DefaultConfig,
+  style?: StyleConfig,
   resolve: Record<string, string>,
   internalCommands: InternalCommandsConfig,
   hash?: HashConfig,

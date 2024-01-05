@@ -2,7 +2,7 @@ import React from 'react';
 import InputLauncher from './launcher-input';
 import ItemList from './item-list';
 import { classNames } from './support';
-import { NUM_VISIBLE_ITEMS, INPUT_HEIGHT, ITEM_HEIGHT } from './constants-conf';
+import { getNumVisibleItems, INPUT_HEIGHT, ITEM_HEIGHT } from './constants-conf';
 import './app.css';
 import { Command, PriorizedSearchResult } from '../shared-models/models';
 
@@ -41,7 +41,7 @@ export default class App extends React.Component<AppProperties, AppState> {
   }
 
   resizeWindow(numItems: number) {
-    let windowHeight = ITEM_HEIGHT * Math.min(numItems, NUM_VISIBLE_ITEMS) + INPUT_HEIGHT;
+    let windowHeight = ITEM_HEIGHT * Math.min(numItems, getNumVisibleItems()) + INPUT_HEIGHT;
     if (numItems > 0) {
       windowHeight += ITEM_HEIGHT;
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Command, HistoryElement } from '../shared-models/models';
-import './launcher-input.css';
+import './launcher-input.scss';
 
 const ipcRenderer = window.ipcRenderer;
 

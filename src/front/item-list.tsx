@@ -1,7 +1,7 @@
 import React from 'react';
-import './item-list.css';
+import './item-list.scss';
 import Item from './item';
-import { NUM_VISIBLE_ITEMS, ITEM_HEIGHT } from './constants-conf';
+import { getNumVisibleItems, ITEM_HEIGHT } from './constants-conf';
 import { Command, PriorizedSearchResult } from '../shared-models/models';
 
 const ipcRenderer = window.ipcRenderer;
@@ -32,7 +32,7 @@ export default class ItemList extends React.Component<ItemListProperties, ItemLi
 
   override render(): JSX.Element {
     return (
-      <div id="items" style={{ height: `${Math.min(this.props.results.length, NUM_VISIBLE_ITEMS) * ITEM_HEIGHT}px` }}>
+      <div id="items" style={{ height: `${Math.min(this.props.results.length, getNumVisibleItems()) * ITEM_HEIGHT}px` }}>
         {
           this.props.results.map((result, i) => {
             const resultSelected = i === this.props.resultSelected;

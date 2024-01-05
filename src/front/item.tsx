@@ -1,5 +1,5 @@
 import React from 'react';
-import './item.css';
+import './item.scss';
 import { classNames } from './support';
 import defaultIcon from './sources/defaultIcon.png';
 import { Command } from '../shared-models/models';

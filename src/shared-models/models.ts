@@ -31,3 +31,10 @@ export interface HistoryElement {
   commandId: string,
   inputText: string
 }
+
+export interface StyleConfig {
+  radius?: number,
+  background?: string,
+  selected?: string,
+  results?: number,
+}

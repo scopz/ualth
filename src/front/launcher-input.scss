@@ -1,3 +1,6 @@
+$radius: var(--radius, 6px);
+$background: var(--background, #333);
+
 #launcher-input input {
   width: calc(100vw - 30px);
   height: 50px;
@@ -6,17 +9,17 @@
   padding: 0 15px;
   font-size: 20px;
 
-  background-color: #333;
+  background-color: $background;
   color: #efefef;
 
-  border-radius: 6px;
+  border-radius: $radius;
   overflow: hidden;
   position: fixed;
   top: 0;
 }
 
 .itemed #launcher-input input {
-  border-radius: 6px 6px 0 0;
+  border-radius: $radius $radius 0 0;
   border-bottom: 1px solid #5a5a5a;
   z-index: 1;
 }

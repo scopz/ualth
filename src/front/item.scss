@@ -1,3 +1,6 @@
+$background: var(--background, #333);
+$selectedBackground: var(--selected, #4a4a4a);
+
 .item {
   overflow: hidden;
   height: 40px;
@@ -5,7 +8,7 @@
   border: 0;
   padding: 0 15px;
   font-size: 16px;
-  background-color: #333;
+  background-color: $background;
   color: #ccc;
   display: flex;
   flex-direction: row;
@@ -17,7 +20,7 @@
 }
 
 .item.selected {
-  background-color: #4a4a4a;
+  background-color: $selectedBackground;
 }
 
 .item:not(.selected):hover {

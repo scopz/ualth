@@ -84,6 +84,7 @@ app.whenReady().then(() => {
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));
 	ipcMain.on('find',          (event, arg) => event.returnValue = match(arg));
 	ipcMain.on('history',       (event, arg) => event.returnValue = historyString(arg));
+	ipcMain.on('styleConfig',   (event, arg) => event.returnValue = config?.style ?? {});
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -1,0 +1,7 @@
+$radius: var(--radius, 6px);
+
+#items {
+  overflow: hidden auto;
+  margin-top: 51px;
+  border-radius: 0 0 $radius $radius;
+}
