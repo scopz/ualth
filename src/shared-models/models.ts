@@ -36,5 +36,8 @@ export interface StyleConfig {
   radius?: number,
   background?: string,
   selected?: string,
+  left?: number,
+  top?: number,
+  width?: number,
   results?: number,
 }

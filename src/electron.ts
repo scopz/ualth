@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, globalShortcut, dialog, screen } from 'electron';
 import { join } from 'path';
 import isDev from 'electron-is-dev';
 // TODO: include the dev tools installer to load React Dev Tools?
@@ -23,7 +23,7 @@ function createWindow(): BrowserWindow {
 		height: DIMENSIONS[1],
 		frame: false,
 		resizable: false,
-		center: true,
+		center: (config?.style?.left ?? -1) < 0,
 		alwaysOnTop: true,
 		skipTaskbar: true,
 		autoHideMenuBar: true,
@@ -40,8 +40,6 @@ function createWindow(): BrowserWindow {
 	// needed in some linux distributions
 	win.setSkipTaskbar(true);
 	win.setAlwaysOnTop(true);
-	const [ x, y ] = win.getPosition();
-	win.setPosition(x, y - 200);
 
 	// and load the index.html of the app.
 	win.loadURL(
@@ -70,15 +68,37 @@ app.whenReady().then(() => {
 
 	const win = createWindow();
 	win.minimize();
+	win.hide();
+
 	globalShortcut.register(config?.defaultHotkey ?? 'Alt+Space', () => {
 		win.show();
 		win.webContents.send('show');
+
+		setTimeout(() => {
+			const winBounds = win.getBounds();
+			const primaryDisplay = screen.getDisplayNearestPoint({x: winBounds.x, y: winBounds.y});
+
+			const width = DIMENSIONS[0] = (config?.style?.width ?? 800) < 0
+				? primaryDisplay.bounds.width
+				: (config?.style?.width ?? 800);
+	
+			const x = (config?.style?.left ?? -1) < 0
+				? (primaryDisplay.bounds.width - DIMENSIONS[0]) / 2 
+				: config?.style?.left ?? 0;
+	
+			const y = (config?.style?.top ?? -1) < 0
+				? (primaryDisplay.bounds.height - DIMENSIONS[1]) / 2 - 200
+				: config?.style?.top ?? 0;
+	
+			win.setBounds({ width, height: DIMENSIONS[1] });
+			win.setPosition(primaryDisplay.bounds.x + x, primaryDisplay.bounds.y + y);
+		}, 10);
 	});
 
 	win.on('blur', () => win.webContents.send('blur'));
 
 	ipcMain.on('hide',          (event) => { win.minimize(); win.hide(); });
-	ipcMain.on('height',        (event, arg) => win.setBounds({ height: arg, width: DIMENSIONS[0] }));
+	ipcMain.on('height',        (event, arg) => win.setBounds({ width: DIMENSIONS[0], height: arg }));
 	ipcMain.on('removeHistory', (event, arg) => removeHistory(arg));
 	ipcMain.on('perform',       (event, arg, params) => event.returnValue = perform(arg, params));
 	ipcMain.on('resolve',       (event, arg) => event.returnValue = resolve(arg));
