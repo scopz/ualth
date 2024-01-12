@@ -35,6 +35,10 @@
 		"/usr/share/applications",
 		"~/.local/share/applications"
 	],
+	"windowsApps": [
+		"C:\\ProgramData\\Microsoft\\Windows\\Start Menu",
+		"%AppData%\\Microsoft\\Windows\\Start Menu"
+	],
 	"firefoxBookmarks": {
 		"profileFolder": "",
 		"path": "",

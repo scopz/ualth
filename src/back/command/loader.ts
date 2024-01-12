@@ -9,6 +9,7 @@ import InternalCommand from "./command-internal";
 import HashCommand from "./command-hash";
 import CopyCommand from "./command-copy";
 import UnixAppsCommand from "./command-unix-apps";
+import WindowsStartAppsCommand from "./command-windows-start-apps";
 
 const commandsClasses = [
   SearchEngineCommand,
@@ -20,6 +21,7 @@ const commandsClasses = [
   HashCommand,
   CopyCommand,
   UnixAppsCommand,
+  WindowsStartAppsCommand,
 ]
 
 export default function load(config: Config) {
