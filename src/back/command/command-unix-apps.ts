@@ -21,6 +21,7 @@ interface DesktopI {
   Name: string;
   Exec: string;
   Icon?: string;
+  GenericName?: string;
   Keywords?: string;
   NoDisplay?: 'true' | 'false';
 }
@@ -121,10 +122,17 @@ function readApplication(dir: string): Application[] {
       }, {} as any)
     )
     .filter(appData => appData.NoDisplay != 'true')
-    .map(appData => ({
-      name: appData.Name,
-      exec: appData.Exec,
-      icon: appData.Icon,
-      keywords: appData.Keywords?.split(';').map(s => s.trim()).filter(Boolean) ?? [],
-    }));
+    .map(appData => {
+      const keywords = [
+        appData.GenericName,
+        ... (appData.Keywords?.split(';').map(s => s.trim()) ?? [])
+      ].filter(Boolean) as string[];
+
+      return {
+        name: appData.Name,
+        exec: appData.Exec,
+        icon: appData.Icon,
+        keywords
+      }
+    });
 }
