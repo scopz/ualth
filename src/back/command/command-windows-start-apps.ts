@@ -20,7 +20,7 @@ export default class WindowsStartAppsCommand extends Command {
 
     this.keyWord = fileName;
     this.title = fileName;
-    //this.icon = data.icon?.startsWith('/') ? data.icon : '';
+    this.icon = 'exec';
     this.fullPath = lnkPath;
     this.generateId();
   }
